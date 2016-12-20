@@ -11,7 +11,7 @@ public class Test {
 
     public static void main(String[] args) throws IOException {
 	// TODO Auto-generated method stub
-	BufferedReader reader = new BufferedReader(new FileReader("414.edges"));
+	BufferedReader reader = new BufferedReader(new FileReader("input.edges"));
 	String line = null;
 	Set<String> set = new HashSet<>();
 	while((line = reader.readLine()) != null){

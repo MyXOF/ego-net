@@ -73,13 +73,30 @@
         }, true);
     });
 
+    myChart.on('click', function (params) {
+        $.get("/node?nodeId="+params.name, function (result) {
+            alert(result['code']);
+        });
+        {#        alert(params.name);#}
+        {#        if (params.componentType === 'markPoint') {#}
+        {#            // 点击到了 markPoint 上#}
+        {#            alert(params.name);#}
+        {#        }#}
+        {#        else if (params.componentType === 'series') {#}
+        {#            if (params.seriesType === 'graph') {#}
+        {#                if (params.dataType === 'edge') {#}
+        {#                    // 点击到了 graph 的 edge（边）上。#}
+        {#                }#}
+        {#                else {#}
+        {#                    // 点击到了 graph 的 node（节点）上。#}
+        {#                }#}
+        {#            }#}
+        {#        }#}
+
+    });
 
     function caculateNodeSize(size) {
-        if (size <= 5)
-            return size * 4;
-        if (size > 5 && size < 20)
-            return size * 1.5;
-        return size * 1.2;
+        return size * 1.5;
     }
 </script>
 </body>

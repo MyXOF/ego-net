@@ -14,11 +14,26 @@ def hello_world():
 def test():
     return render_template("index.html")
 
+@app.route("/node",methods=['GET','POST'])
+def get_node():
+    if request.method == 'POST':
+        nodeId = request.json['nodeId']
+    else:
+        nodeId = request.args.get('nodeId', '')
+
+    print(nodeId)
+    return jsonify({'code':"OK"})
+    pass
 
 @app.route("/data", methods=['GET', 'POST'])
 def get_data():
-    d = json.load(codecs.open(JSON_DATA_PATH + 'data-generator/data/json/relationship.json', 'r', 'utf-8-sig'))
-    return jsonify(d)
+    nodes = json.load(codecs.open(NODE_DATA_PATH, 'r', 'utf-8-sig'))
+    edges = json.load(codecs.open(EDGE_DATA_PATH, 'r', 'utf-8-sig'))
+    # d = json.load(codecs.open('/Users/xuyi/Documents/workspace/ego-net/data-generator/data/json/relationship.json', 'r', 'utf-8-sig'))
+    info = {}
+    info['nodes'] = nodes['nodes']
+    info['edges'] = edges['edges']
+    return jsonify(info)
     pass
 
 if __name__ == '__main__':

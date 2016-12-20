@@ -1,5 +1,6 @@
 package com.corp.algorithm;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,25 +45,17 @@ public class SparkJob implements Serializable {
 	this.textFile = context.textFile(filePath);
     }
 
-    public void start() {
+    public void start() throws IOException {
 	JavaPairRDD<Tuple3<Integer, Integer, Integer>, Map<Integer, Set<Integer>>> mapResultInput = mapStage();
-//	List<Tuple2<Tuple3<Integer, Integer, Integer>, Map<Integer, Set<Integer>>>> result = mapResultInput.collect();
-//	for (Tuple2<Tuple3<Integer, Integer, Integer>, Map<Integer, Set<Integer>>> info : result) {
-//	    System.out.println(info._1.toString());
-//	    for (Map.Entry<Integer, Set<Integer>> entry : info._2.entrySet()) {
-//		System.out.println("\t" + entry.getKey() + ": " + entry.getValue().toString());
-//	    }
-//
-//	}
-
 	JavaPairRDD<Integer, Set<Tuple2<Integer, Integer>>> egoNetAll = reduceStage(mapResultInput);
-	egoNetAll.saveAsTextFile("hdfs://192.168.130.15:9000/user/hadoop/xuyi/out.txt");
-//	List<Tuple2<Integer, Set<Tuple2<Integer, Integer>>>> egoNetList = egoNetAll.collect();
+//	egoNetAll.saveAsTextFile("hdfs://192.168.130.15:9000/user/hadoop/xuyi/out.txt");
+	List<Tuple2<Integer, Set<Tuple2<Integer, Integer>>>> egoNetList = egoNetAll.collect();
 //	for(Tuple2<Integer, Set<Tuple2<Integer, Integer>>> v : egoNetList){
 //	    System.out.println(v._1);
 //	    System.out.println("    "+v._2.toString());
 //	    
 //	}
+	Utils.createReulstJsonFile(Config.EGONET_OUTPUT_PATH, egoNetList);
     }
 
     public void stop() {
@@ -194,8 +187,9 @@ public class SparkJob implements Serializable {
 	return egoNetAll;
     }
 
-    public static void main(String[] args) {
-	SparkJob job = new SparkJob("hdfs://192.168.130.15:9000/user/hadoop/xuyi/test.txt", "ego-net", 4039);
+    public static void main(String[] args) throws IOException {
+//	SparkJob job = new SparkJob("hdfs://192.168.130.15:9000/user/hadoop/xuyi/test.txt", "ego-net", 4039);
+	SparkJob job = new SparkJob("input.edges", "ego-net", 148);
 	job.init();
 	job.start();
 	job.stop();

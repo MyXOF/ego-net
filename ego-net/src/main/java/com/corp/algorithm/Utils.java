@@ -1,11 +1,18 @@
 package com.corp.algorithm;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import scala.Tuple2;
 import scala.Tuple3;
 
 public class Utils {
@@ -62,7 +69,25 @@ public class Utils {
 	    
 	    matrix.removeVertexAndAllEdges(currentNode);
 	}
-	
 	return result;
+    }
+    
+    public static void createReulstJsonFile(String outputFile, List<Tuple2<Integer, Set<Tuple2<Integer, Integer>>>> egoNetList) throws IOException{
+	JSONObject data = new JSONObject();
+	for(Tuple2<Integer, Set<Tuple2<Integer, Integer>>> egoNet : egoNetList){
+	    JSONArray edges = new JSONArray();
+	    
+	    for(Tuple2<Integer, Integer> edge : egoNet._2){
+		JSONObject o = new JSONObject();
+		o.put("from", edge._1.toString());
+		o.put("to", edge._2.toString());
+		edges.put(o);
+	    }
+	    data.put(egoNet._1.toString(), edges);
+	}
+	
+	BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+	writer.write(data.toString());
+	writer.close();
     }
 }
