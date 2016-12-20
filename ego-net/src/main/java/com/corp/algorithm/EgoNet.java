@@ -17,13 +17,16 @@ public class EgoNet implements Serializable {
 	result = new HashMap<>();
     }
 
-    public void add(int vertex, int vertexFrom, int vertexTo) {
-	if (result.containsKey(vertex)) {
-	    result.get(vertex).add(generateEdge(vertexFrom, vertexTo));
+    public void add(int vertex, int vertexFrom, int vertexTo, int[] dict) {
+	int vertex2 = dict[vertex];
+	int vertexFrom2 = dict[vertexFrom];
+	int vertexTo2 = dict[vertexTo];
+	if (result.containsKey(vertex2)) {
+	    result.get(vertex2).add(generateEdge(vertexFrom2, vertexTo2));
 	} else {
 	    Set<Tuple2<Integer, Integer>> edges = new HashSet<>();
-	    edges.add(generateEdge(vertexFrom, vertexTo));
-	    result.put(vertex, edges);
+	    edges.add(generateEdge(vertexFrom2, vertexTo2));
+	    result.put(vertex2, edges);
 	}
     }
 

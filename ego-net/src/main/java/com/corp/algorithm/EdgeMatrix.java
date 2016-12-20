@@ -12,7 +12,7 @@ public class EdgeMatrix {
     private int length;
     private Vertex[] vertexs;
     private Map<Integer, Integer> indexAfterArrangedMap;
-    private int[] indexBeforeArranged;
+    public int[] indexBeforeArranged;
     private int size;
     
     public EdgeMatrix(int length){
@@ -95,7 +95,7 @@ public class EdgeMatrix {
 	if(currentVertex == null) return null;
 	
 	for(int j = i+1;j < length;j++){
-	    if(vertexs[j].degree < currentVertex.degree){
+	    if(vertexs[j].flag & vertexs[j].degree < currentVertex.degree){
 		currentVertex = vertexs[j];
 	    }
 	}

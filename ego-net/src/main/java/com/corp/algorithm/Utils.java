@@ -43,8 +43,8 @@ public class Utils {
 	    for(int j = 0;j < size;j++){
 		if(vector[j] & j != currentNode){
 		    neighbours.add(j);
-		    result.add(currentNode, currentNode, j);
-		    result.add(j, currentNode, j);
+		    result.add(currentNode, currentNode, j, matrix.indexBeforeArranged);
+		    result.add(j, currentNode, j, matrix.indexBeforeArranged);
 		}
 	    }
 	    
@@ -53,9 +53,9 @@ public class Utils {
 		    int n1 = neighbours.get(p);
 		    int n2 = neighbours.get(q);
 		    if(matrix.hasEdge(n1, n2)){
-			result.add(currentNode, n1, n2);
-			result.add(n1, currentNode, n2);
-			result.add(n2, currentNode, n1);
+			result.add(currentNode, n1, n2, matrix.indexBeforeArranged);
+			result.add(n1, currentNode, n2, matrix.indexBeforeArranged);
+			result.add(n2, currentNode, n1, matrix.indexBeforeArranged);
 		    }
 		}
 	    }
