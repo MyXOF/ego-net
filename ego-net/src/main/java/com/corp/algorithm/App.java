@@ -20,8 +20,8 @@ import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 
 public final class App {
-    private static final String SPILTOR = ",";
-    private static final int PARTIITON_NUM = 3;
+    private static final String SPILTOR = " ";
+    private static final int PARTIITON_NUM = 64;
 
     public static int caculateHashcode(int number) {
 	return number % PARTIITON_NUM;
@@ -35,7 +35,7 @@ public final class App {
 
     public static void main(String[] args) throws Exception {
 	JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("word count"));
-	JavaRDD<String> textFile = context.textFile("test");
+	JavaRDD<String> textFile = context.textFile("test.txt");
 
 	JavaRDD<Tuple2<Tuple3<Integer, Integer, Integer>, Tuple2<Integer, Integer>>> inputGraph = textFile.flatMap(
 		new FlatMapFunction<String, Tuple2<Tuple3<Integer, Integer, Integer>, Tuple2<Integer, Integer>>>() {
@@ -131,23 +131,23 @@ public final class App {
 		System.out.println("\t" + entry.getKey() + ": " + entry.getValue());
 	    }
 	    
-	    for(Tuple2<Integer, Integer> edge : info._2._2){
-		System.out.println("\t"+edge.toString());
-	    }
+//	    for(Tuple2<Integer, Integer> edge : info._2._2){
+//		System.out.println("\t"+edge.toString());
+//	    }
 	}
 	
-	JavaRDD<List<Tuple2<Integer, Integer>>> ego = mapResultInput.map(new Function<Tuple2<Tuple3<Integer,Integer,Integer>,Tuple2<Map<Integer,Integer>,List<Tuple2<Integer,Integer>>>>, List<Tuple2<Integer, Integer>>>() {
-
-	    @Override
-	    public List<Tuple2<Integer, Integer>> call(
-		    Tuple2<Tuple3<Integer, Integer, Integer>, Tuple2<Map<Integer, Integer>, List<Tuple2<Integer, Integer>>>> info)
-		    throws Exception {
-		Map<Integer, Integer> degreeMap = info._2._1;
-		List<Tuple2<Integer, Integer>> edges = info._2._2;
-		
-		return null;
-	    }
-	});
+//	JavaRDD<List<Tuple2<Integer, Integer>>> ego = mapResultInput.map(new Function<Tuple2<Tuple3<Integer,Integer,Integer>,Tuple2<Map<Integer,Integer>,List<Tuple2<Integer,Integer>>>>, List<Tuple2<Integer, Integer>>>() {
+//
+//	    @Override
+//	    public List<Tuple2<Integer, Integer>> call(
+//		    Tuple2<Tuple3<Integer, Integer, Integer>, Tuple2<Map<Integer, Integer>, List<Tuple2<Integer, Integer>>>> info)
+//		    throws Exception {
+//		Map<Integer, Integer> degreeMap = info._2._1;
+//		List<Tuple2<Integer, Integer>> edges = info._2._2;
+//		
+//		return null;
+//	    }
+//	});
 	
 
 
