@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request,  jsonify, abort,  make_response
 import json, codecs
 from config.config import *
+from pylib.Manager import NodeManager
 
 app = Flask(__name__)
 
@@ -10,30 +11,26 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.route('/test', methods=['GET'])
-def test():
+@app.route('/index', methods=['GET'])
+def index():
     return render_template("index.html")
 
 @app.route("/node",methods=['GET','POST'])
 def get_node():
     if request.method == 'POST':
         nodeId = request.json['nodeId']
+        opr_type = request.json['type']
     else:
         nodeId = request.args.get('nodeId', '')
-
+        opr_type = request.args.get('type', '')
     print(nodeId)
-    return jsonify({'code':"OK"})
+    return jsonify(NodeManager.get_ego_net(nodeId, opr_type))
     pass
 
-@app.route("/data", methods=['GET', 'POST'])
+@app.route("/graph", methods=['GET', 'POST'])
 def get_data():
-    nodes = json.load(codecs.open(NODE_DATA_PATH, 'r', 'utf-8-sig'))
-    edges = json.load(codecs.open(EDGE_DATA_PATH, 'r', 'utf-8-sig'))
-    # d = json.load(codecs.open('/Users/xuyi/Documents/workspace/ego-net/data-generator/data/json/relationship.json', 'r', 'utf-8-sig'))
-    info = {}
-    info['nodes'] = nodes['nodes']
-    info['edges'] = edges['edges']
-    return jsonify(info)
+    NodeManager.clear_ego_net()
+    return jsonify(NodeManager.get_graph())
     pass
 
 if __name__ == '__main__':
