@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,  jsonify, abort,  make_response
+from flask import Flask, render_template, request,  jsonify, abort,  make_response, redirect
 import json, codecs
 from config.config import *
 from pylib.Manager import NodeManager
@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
-    return 'Hello World!'
+def page():
+    return redirect("/index")
 
 
 @app.route('/index', methods=['GET'])
@@ -23,7 +23,6 @@ def get_node():
     else:
         nodeId = request.args.get('nodeId', '')
         opr_type = request.args.get('type', '')
-    print(nodeId)
     return jsonify(NodeManager.get_ego_net(nodeId, opr_type))
     pass
 

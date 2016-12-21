@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>ego-net</title>
 
-<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+    <!-- 可选的Bootstrap主题文件（一般不用引入） -->
     <link rel="stylesheet" href="{{ url_for('static', filename="css/bootstrap.min.css") }}">
     <link rel="stylesheet" href="{{ url_for('static', filename="css/index.css") }}">
     <!-- 引入 echarts.js -->
@@ -17,42 +17,59 @@
 <body>
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
+    <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Ego-Net</a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Ego-Net</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">全图</a></li>
-            <li><a href="#about">添加ego点</a></li>
-            <li><a href="#contact">删除点</a></li>
-          </ul>
+            <ul class="nav navbar-nav">
+                <li id="graph-all" class="active bar"><a href="#">全图</a></li>
+                <li id="add-ego" class="bar"><a href="#add">添加ego点</a></li>
+                <li id="remove-ego" class="bar"><a href="#remove">删除点</a></li>
+            </ul>
         </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+    </div>
+</nav>
 
 <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
 <div id="main" style="width: 100%;height:1200px;"></div>
 <script type="text/javascript">
-    OPR_STATUS = "add";
+    OPR_STATUS = "graph-all";
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'), "roma");
 
     myChart.showLoading();
-{#    $.getJSON('/node?nodeId=34&type=add',function(json){#}
-{#        show_graph(json, "人物关系")#}
-{#    });#}
-    $.getJSON('/graph', function (json) {
-        show_graph(json, "人物关系")
+    load_graph_all();
+    function load_graph_all() {
+        $.getJSON('/graph', function (json) {
+            show_graph(json, "人物关系")
+        });
+    }
+
+
+    $(".bar").click(function () {
+        var l = $(".bar").length;
+        for (var i = 0; i <= l; i++) {
+            var p = $($(".bar")[i]);
+            p.removeClass("active");
+        }
+        var c = $(this);
+        c.addClass("active");
+        OPR_STATUS = c.attr("id");
+        if (OPR_STATUS == 'graph-all') {
+            load_graph_all();
+        }
     });
 
-    function show_graph(json, title){
+
+    function show_graph(json, title) {
         myChart.hideLoading();
         myChart.setOption(option = {
             title: {
@@ -110,10 +127,9 @@
     }
 
     myChart.on('click', function (params) {
-        url = "/node?nodeId="+params.name+"&type="+OPR_STATUS;
-        console.log(url);
+        if (OPR_STATUS == "graph-all") return;
+        url = "/node?nodeId=" + params.name + "&type=" + OPR_STATUS;
         $.get(url, function (json) {
-            console.log(1);
             show_graph(json, "ego-net关系")
         });
 
