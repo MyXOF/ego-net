@@ -1,4 +1,6 @@
-HEADER = "C:/Users/Emaster/Documents/WorkSpace/ego-net/data-generator/data/json/"
+from pylib.utils import *
+
+HEADER = get_current_directory()+"/data/json/"
 
 NODE_DATA_PATH = HEADER + "nodes.json"
 EDGE_DATA_PATH = HEADER + "edges.json"

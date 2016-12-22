@@ -1,13 +1,11 @@
-from flask import Flask, render_template, request,  jsonify, abort,  make_response, redirect
-import json, codecs
-from config.config import *
+from flask import Flask, render_template, request,  jsonify, redirect
 from pylib.Manager import NodeManager
 
 app = Flask(__name__)
 
 
 @app.route('/')
-def page():
+def go_to_index():
     return redirect("/index")
 
 

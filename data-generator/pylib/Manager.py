@@ -59,8 +59,6 @@ class NodeManager:
             if ego_node in cls._ego_delete_points:
                 cls._ego_delete_points.remove(ego_node)
         elif oper_type == "remove-ego":
-            # if ego_node in cls._ego_net_points:
-            #     cls._ego_net_points.remove(ego_node)
             cls._ego_delete_points.add(ego_node)
 
         ego_net_graph = {'nodes': [], 'edges': []}
