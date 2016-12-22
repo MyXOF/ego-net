@@ -29,13 +29,15 @@ public class SparkJob implements Serializable {
     private String applicationName;
     private int vertexNum;
     private transient JavaRDD<String> textFile;
+    private String outFilePath;
 
     private int partitionNum;
 
-    public SparkJob(String filePath, String applicationName, int vertexNum) {
+    public SparkJob(String filePath, String applicationName, int vertexNum, String outFilePath) {
 	this.filePath = filePath;
 	this.applicationName = applicationName;
 	this.vertexNum = vertexNum;
+	this.outFilePath = outFilePath;
     }
 
     public void init() {
@@ -48,14 +50,8 @@ public class SparkJob implements Serializable {
     public void start() throws IOException {
 	JavaPairRDD<Tuple3<Integer, Integer, Integer>, Map<Integer, Set<Integer>>> mapResultInput = mapStage();
 	JavaPairRDD<Integer, Set<Tuple2<Integer, Integer>>> egoNetAll = reduceStage(mapResultInput);
-//	egoNetAll.saveAsTextFile("hdfs://192.168.130.15:9000/user/hadoop/xuyi/out.txt");
 	List<Tuple2<Integer, Set<Tuple2<Integer, Integer>>>> egoNetList = egoNetAll.collect();
-//	for(Tuple2<Integer, Set<Tuple2<Integer, Integer>>> v : egoNetList){
-//	    System.out.println(v._1);
-//	    System.out.println("    "+v._2.toString());
-//	    
-//	}
-	Utils.createReulstJsonFile(Config.EGONET_OUTPUT_PATH, egoNetList);
+	Utils.createReulstJsonFile(outFilePath, egoNetList);
     }
 
     public void stop() {
@@ -159,8 +155,8 @@ public class SparkJob implements Serializable {
 			}
 			return tmp.iterator();
 		    }
-		});	
-	
+		});
+
 	JavaPairRDD<Integer, Set<Tuple2<Integer, Integer>>> pairRDD = flatMap.mapToPair(
 		new PairFunction<Tuple2<Integer, Set<Tuple2<Integer, Integer>>>, Integer, Set<Tuple2<Integer, Integer>>>() {
 		    private static final long serialVersionUID = -4370916093767390579L;
@@ -171,7 +167,7 @@ public class SparkJob implements Serializable {
 			return new Tuple2<Integer, Set<Tuple2<Integer, Integer>>>(input._1, input._2);
 		    }
 		});
-	
+
 	JavaPairRDD<Integer, Set<Tuple2<Integer, Integer>>> egoNetAll = pairRDD.reduceByKey(
 		new Function2<Set<Tuple2<Integer, Integer>>, Set<Tuple2<Integer, Integer>>, Set<Tuple2<Integer, Integer>>>() {
 		    private static final long serialVersionUID = -8964883092335889951L;
@@ -188,8 +184,16 @@ public class SparkJob implements Serializable {
     }
 
     public static void main(String[] args) throws IOException {
-//	SparkJob job = new SparkJob("hdfs://192.168.130.15:9000/user/hadoop/xuyi/test.txt", "ego-net", 4039);
-	SparkJob job = new SparkJob("input.edges", "ego-net", 148);
+	// SparkJob job = new
+	// SparkJob("hdfs://192.168.130.15:9000/user/hadoop/xuyi/test.txt",
+	// "ego-net", 4039);
+	// SparkJob job = new SparkJob("input.edges", "ego-net", 148);
+
+	if (args.length < 4) {
+	    System.out.println("input mode param : inputFilePath, applicationName, nodeNumer, outputJsonFile");
+	    return;
+	}
+	SparkJob job = new SparkJob(args[0], args[1], Integer.valueOf(args[2]), args[3]);
 	job.init();
 	job.start();
 	job.stop();

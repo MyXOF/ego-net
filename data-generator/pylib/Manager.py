@@ -74,13 +74,17 @@ class NodeManager:
                 if source_id not in node_set:
                     origin_node_info = copy.deepcopy(cls._node_info[source_id])
                     if source_id in cls._ego_net_points:
-                        origin_node_info['color'] = '#C0C0C0'
+                        origin_node_info['color'] = '#AD5A5A'
+                    if source_id in cls._ego_delete_points:
+                        origin_node_info['color'] = '#8E8E8E'
                     ego_net_graph['nodes'].append(origin_node_info)
                     node_set.add(source_id)
                 if target_id not in node_set:
                     origin_node_info = copy.deepcopy(cls._node_info[target_id])
                     if target_id in cls._ego_net_points:
-                        origin_node_info['color'] = '#C0C0C0'
+                        origin_node_info['color'] = '#AD5A5A'
+                    if target_id in cls._ego_delete_points:
+                        origin_node_info['color'] = '#8E8E8E'
                     ego_net_graph['nodes'].append(origin_node_info)
                     node_set.add(target_id)
             pass

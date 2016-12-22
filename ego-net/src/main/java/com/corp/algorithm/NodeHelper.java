@@ -7,11 +7,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class Test {
+public class NodeHelper {
 
     public static void main(String[] args) throws IOException {
 	// TODO Auto-generated method stub
-	BufferedReader reader = new BufferedReader(new FileReader("input.edges"));
+	BufferedReader reader = new BufferedReader(new FileReader("dataset/3437.edges"));
 	String line = null;
 	Set<String> set = new HashSet<>();
 	while((line = reader.readLine()) != null){
