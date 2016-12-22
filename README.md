@@ -25,7 +25,6 @@ ego-net项目主要实现了论文《Ego-net Community Mining Applied to Friend 
 cd bin/
 
 /xxx/spark/bin/spark-submit --class com.corp.algorithm.SparkJob --master spark://host:port --jars spark-ego-net.jar spark-job.jar 输入文件路径 Application名称 顶点数 输出JSON文件名
-
 ```
 
 
